@@ -1,0 +1,99 @@
+
+services:
+  user-service:
+    env_file:
+      - .env
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "${USER_SERVICE_PORT:-8081}:8080"
+    networks:
+      - app-network
+    depends_on:
+      - user-service-db
+      - eureka-server
+      - api-gateway
+    environment:
+      - APP_PROFILE=${APP_PROFILE}
+      - DB_URL=${USER_SERVICE_DB_URL:-jdbc:postgresql://user-service-db:5432/user_service_db}
+      - DB_USERNAME=${USER_SERVICE_DB_USERNAME}
+      - DB_PASSWORD=${USER_SERVICE_DB_PASSWORD}
+
+  company-service:
+    env_file:
+      - .env
+    build:
+      context: ./company-service
+      dockerfile: Dockerfile
+    ports:
+      - "${COMPANY_SERVICE_PORT:-8082}:8080"
+    networks:
+      - app-network
+    depends_on:
+      - company-service-db
+      - eureka-server
+      - api-gateway
+    environment:
+      - APP_PROFILE=${APP_PROFILE}
+      - DB_URL=${COMPANY_SERVICE_DB_URL:-jdbc:postgresql://company-service-db:5432/company_service_db}
+      - DB_USERNAME=${COMPANY_SERVICE_DB_USERNAME}
+      - DB_PASSWORD=${COMPANY_SERVICE_DB_PASSWORD}
+
+  api-gateway:
+    env_file:
+      - .env
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "${API_GATEWAY_PORT:-8765}:8765"
+    networks:
+      - app-network
+    depends_on:
+      - eureka-server
+
+  eureka-server:
+    env_file:
+      - .env
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    ports:
+      - "${EUREKA_PORT:-8761}:8761"
+    networks:
+      - app-network
+
+  user-service-db:
+    image: postgres:17.0
+    expose:
+      - "5432"
+    ports:
+      - "${USER_SERVICE_DB_PORT:-5431}:5432"
+    networks:
+      - app-network
+    environment:
+      - POSTGRES_DB=${DB_DB_NAME:-user_service_db}
+      - POSTGRES_PASSWORD=${USER_SERVICE_DB_PASSWORD}
+      - POSTGRES_USER=${USER_SERVICE_DB_USERNAME}
+    volumes:
+      - ./db_data/user:/var/lib/postgresql/data
+
+  company-service-db:
+    image: postgres:17.0
+    expose:
+      - "5432"
+    ports:
+      - "${COMPANY_SERVICE_DB_PORT:-5432}:5432"
+    networks:
+      - app-network
+    environment:
+      - POSTGRES_DB=${DB_DB_NAME:-company_service_db}
+      - POSTGRES_PASSWORD=${COMPANY_SERVICE_DB_PASSWORD}
+      - POSTGRES_USER=${COMPANY_SERVICE_DB_USERNAME}
+    volumes:
+      - ./db_data/company:/var/lib/postgresql/data
+
+networks:
+  app-network:
+    driver: bridge
