@@ -1,0 +1,12 @@
+[submodule "service-registry"]
+	path = service-registry
+	url = https://github.com/MAOButNotTheDong/service-registry.git
+[submodule "company-service"]
+	path = company-service
+	url = https://github.com/MAOButNotTheDong/company-service.git
+[submodule "user-service"]
+	path = user-service
+	url = https://github.com/MAOButNotTheDong/user-service.git
+[submodule "api-gateway"]
+	path = api-gateway
+	url = https://github.com/MAOButNotTheDong/api-gateway.git
