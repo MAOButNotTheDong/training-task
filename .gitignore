@@ -1,6 +1,2 @@
-.env-example
-api-gateway
-user-service
-company-service
-service-registry
+.env
 db_data

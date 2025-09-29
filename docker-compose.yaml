@@ -12,8 +12,6 @@ services:
       - app-network
     depends_on:
       - user-service-db
-      - eureka-server
-      - api-gateway
     environment:
       - APP_PROFILE=${APP_PROFILE}
       - DB_URL=${USER_SERVICE_DB_URL:-jdbc:postgresql://user-service-db:5432/user_service_db}
@@ -32,8 +30,6 @@ services:
       - app-network
     depends_on:
       - company-service-db
-      - eureka-server
-      - api-gateway
     environment:
       - APP_PROFILE=${APP_PROFILE}
       - DB_URL=${COMPANY_SERVICE_DB_URL:-jdbc:postgresql://company-service-db:5432/company_service_db}
@@ -50,8 +46,6 @@ services:
       - "${API_GATEWAY_PORT:-8765}:8765"
     networks:
       - app-network
-    depends_on:
-      - eureka-server
 
   eureka-server:
     env_file:
