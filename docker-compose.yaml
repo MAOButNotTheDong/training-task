@@ -17,6 +17,8 @@ services:
       - DB_URL=${USER_SERVICE_DB_URL:-jdbc:postgresql://user-service-db:5432/user_service_db}
       - DB_USERNAME=${USER_SERVICE_DB_USERNAME}
       - DB_PASSWORD=${USER_SERVICE_DB_PASSWORD}
+    volumes:
+      - ./logs/user-service:/logs
 
   company-service:
     env_file:
@@ -35,6 +37,8 @@ services:
       - DB_URL=${COMPANY_SERVICE_DB_URL:-jdbc:postgresql://company-service-db:5432/company_service_db}
       - DB_USERNAME=${COMPANY_SERVICE_DB_USERNAME}
       - DB_PASSWORD=${COMPANY_SERVICE_DB_PASSWORD}
+    volumes:
+      - ./logs/company-service:/logs
 
   api-gateway:
     env_file:
